@@ -1,0 +1,7 @@
+Failat 21
+copy MPW package/MPW/
+copy fixed/#? package/MPW/fixed
+cd package
+delete MPW_00.lha
+lha -r ao5 MPW_00.lha MPW MPW.info
+cd /
