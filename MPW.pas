@@ -12,7 +12,7 @@ uses
   {$ENDIF}{$ENDIF}
   Exec, AmigaDos, workbench, icon,
   sysutils, strutils,Classes, fphttpserver, fpmimetypes, wikiserverunit, MUIClass.Dialog,
-  documentsunit, editunit, templateunit, fphttpclient, mainguiunit, searchunit, debugunit;
+  documentsunit, editunit, templateunit, fphttpclient, mainguiunit, searchunit, debugunit, aboutunit, imagesunit;
 
 Type
 

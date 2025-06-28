@@ -6,3 +6,5 @@ lib/
 *.lps
 MPW
 package/MPW/MPW
+
+backup/

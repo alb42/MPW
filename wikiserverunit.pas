@@ -42,7 +42,8 @@ var
 implementation
 
 uses
-  documentsunit, editunit, searchunit, httpprotocol, templateunit, debugunit;
+  documentsunit, editunit, searchunit, httpprotocol, templateunit, debugunit,
+  AboutUnit, imagesunit;
 
 { TWikiServer }
 
@@ -124,6 +125,8 @@ begin
         '/list/': ListAllFiles(AResponse);
         '/pics/': LoadImage(FN, AResponse);
         '/search/': SearchDocument(ARequest.ContentFields, AResponse);
+        '/about/': PrintAbout(URI.Document, AResponse);
+        '/images/': ImagesPage(AResponse);
         else
         begin
           Send404(AResponse);

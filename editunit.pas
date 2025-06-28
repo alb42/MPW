@@ -15,7 +15,8 @@ procedure ListAllFiles(var AResponse: TFPHTTPConnectionResponse);
 procedure Send404(var AResponse: TFPHTTPConnectionResponse);
 procedure Send403(var AResponse: TFPHTTPConnectionResponse);
 
-procedure SendText(var TextToSend: string; var AResponse: TFPHTTPConnectionResponse);
+procedure SendText(TextToSend: TStrings; var AResponse: TFPHTTPConnectionResponse); overload;
+procedure SendText(var TextToSend: string; var AResponse: TFPHTTPConnectionResponse); overload;
 
 function INetString(INS: string): string;
 
@@ -344,6 +345,14 @@ begin
   finally
     Mem.Free;
   end;
+end;
+
+procedure SendText(TextToSend: TStrings; var AResponse: TFPHTTPConnectionResponse);
+var
+  s: String;
+begin
+  s := TextToSend.Text;
+  SendText(s, AResponse);
 end;
 
 end.
