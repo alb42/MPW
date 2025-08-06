@@ -5,6 +5,7 @@ lib/
 *.lha
 *.lps
 MPW
+!package/MPW/
 package/MPW/MPW
 
 backup/
