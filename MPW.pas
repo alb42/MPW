@@ -11,8 +11,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Exec, AmigaDos, workbench, icon,
-  sysutils, strutils,Classes, fphttpserver, fpmimetypes, wikiserverunit, MUIClass.Dialog,
-  documentsunit, editunit, templateunit, fphttpclient, mainguiunit, searchunit, debugunit, aboutunit, imagesunit;
+  sysutils, strutils,Classes, fphttpserver, fpmimetypes, wikiserverunit, MUIClass.Dialog, HTTPDefs,
+  documentsunit, editunit, templateunit, fphttpclient, mainguiunit, searchunit, debugunit, aboutunit, imagesunit, responsehelper;
 
 Type
 
@@ -96,17 +96,28 @@ var
   DObj: pDiskObject;
 begin
   WithGUI := True;
+  DebugToCON := False;
+  DebugToDebug := False;
   if FindCmdLineSwitch('h') then
   begin
-    Writeln('Usage: ',ExtractFileName(ParamStr(0)),' -noGUI -p [port]');
-    writeln('  -noGUI do not show the MUI GUI');
-    Writeln('  -p port for the server, Default: 8080');
+    Writeln('Usage: ',ExtractFileName(ParamStr(0)),' -noGUI -p [port] -debug');
+    WriteLn('  -noGUI   do not show the MUI GUI');
+    WriteLn('  -p port  port for the server, Default: 8080');
+    WriteLn('  -debug   enable debug output');
     Exit;
   end;
   if FindCmdLineSwitch('noGUI') then
   begin
     WithGUI := False;
-    writeln('no GUI');
+    WriteLn('GUI disabled');
+  end;
+  if FindCmdLineSwitch('debug') then
+  begin
+    if WithGUI then
+      DebugToCON := True
+    else
+      DebugToDebug := True;
+    DebugOut('Debug Output on');
   end;
   //
   if Assigned(System.AOS_wbMsg) then
@@ -115,6 +126,8 @@ begin
     if Assigned(DObj) then
     begin
       ServerPort := StrToIntDef(GetStrToolType(DObj, 'PORT', '8080'), 8080);
+      if LowerCase(GetStrToolType(DObj, 'DEBUG', '')) = 'yes' then
+        DebugToDebug := True;
       FreeDiskObject(DObj);
     end;
   end;
@@ -139,11 +152,11 @@ begin
   end
   else
   begin // ############ WITHOUT GUI
-    writeln('MPW server at port ', ServerPort);
+    writeln('MPW server started http://localhost:', ServerPort);
     writeln('Press Ctrl+C to quit');
     MT.Start;
     Wait(SIGBREAKF_CTRL_C);
-    writeln('End server');
+    writeln('End server.');
   end;
   // quit everything
   if Assigned(Serv) then
@@ -156,7 +169,7 @@ begin
   end;
   MT.WaitFor;
   MT.Free;
-  DebugOut('program end');
+  DebugOut('Program end.');
 end;
 
 

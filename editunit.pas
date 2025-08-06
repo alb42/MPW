@@ -12,18 +12,12 @@ procedure SaveDocument(Params: TStrings; var AResponse: TFPHTTPConnectionRespons
 
 procedure ListAllFiles(var AResponse: TFPHTTPConnectionResponse);
 
-procedure Send404(var AResponse: TFPHTTPConnectionResponse);
-procedure Send403(var AResponse: TFPHTTPConnectionResponse);
-
-procedure SendText(TextToSend: TStrings; var AResponse: TFPHTTPConnectionResponse); overload;
-procedure SendText(var TextToSend: string; var AResponse: TFPHTTPConnectionResponse); overload;
-
 function INetString(INS: string): string;
 
 implementation
 
 uses
-  documentsunit, fpmimetypes, httpprotocol, templateunit, debugunit;
+  documentsunit, fpmimetypes, httpprotocol, templateunit, debugunit, responsehelper;
 
 
 function INetString(INS: String): String;
@@ -289,70 +283,6 @@ begin
   finally
     Mem.Free;
   end;
-end;
-
-procedure Send404(var AResponse: TFPHTTPConnectionResponse);
-var
-  Mem: TStringStream;
-begin
-  Mem := TStringStream.Create('<HTML><Title>404 - not found</title><body><H1>404 - Not Found</H1><p>The requested URL was not found on the server. Back to <a href="/">Main Page</a></p><HR><address>MPW 0.1</address></body></html>');
-  Mem.Position := 0;
-  try
-    AResponse.ContentType := MimeTypes.GetMimeType('.html');
-    AResponse.ContentLength := Mem.Size;
-    AResponse.ContentStream := Mem;
-    AResponse.Code := 404;
-    //AResponse.CodeText := 'Not Found';
-    AResponse.SendContent;
-    AResponse.ContentStream := nil;
-  finally
-    Mem.Free;
-  end;
-end;
-
-procedure Send403(var AResponse: TFPHTTPConnectionResponse);
-var
-  Mem: TStringStream;
-begin
-  Mem := TStringStream.Create('<HTML><Title>403 - Forbidden</title><body><H1>403 - Forbidden</H1><p>You have no access to this page. Back to <a href="/">Main Page</a></p><HR><address>MPW 0.1</address></body></html>');
-  Mem.Position := 0;
-  try
-    AResponse.ContentType := MimeTypes.GetMimeType('.html');
-    AResponse.ContentLength := Mem.Size;
-    AResponse.ContentStream := Mem;
-    AResponse.Code := 403;
-    //AResponse.CodeText := 'Not Found';
-    AResponse.SendContent;
-    AResponse.ContentStream := nil;
-  finally
-    Mem.Free;
-  end;
-end;
-
-procedure SendText(var TextToSend: string; var AResponse: TFPHTTPConnectionResponse);
-var
-  Mem: TStringStream;
-begin
-  Mem := TStringStream.Create(TextToSend);
-  Mem.Position := 0;
-  try
-    AResponse.ContentType := MimeTypes.GetMimeType('.html');
-    AResponse.ContentLength := Mem.Size;
-    AResponse.ContentStream := Mem;
-    AResponse.Code := 200;
-    AResponse.SendContent;
-    AResponse.ContentStream := nil;
-  finally
-    Mem.Free;
-  end;
-end;
-
-procedure SendText(TextToSend: TStrings; var AResponse: TFPHTTPConnectionResponse);
-var
-  s: String;
-begin
-  s := TextToSend.Text;
-  SendText(s, AResponse);
 end;
 
 end.

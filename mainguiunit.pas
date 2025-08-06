@@ -11,9 +11,6 @@ uses
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.Group,
   MUIClass.Dialog, MUIClass.Gadget, MUIClass.Image;
 
-const
-  VERSION = '$VER: MPW 0.1 (22.05.2025)';
-
 type
 
   { TMainWindow }
@@ -25,6 +22,7 @@ type
     procedure ButtonClick(Sender: TObject);
     procedure CopyClick(Sender: TObject);
     procedure EndServerEvent(Sender: TObject);
+    procedure ReloadTemplatesEvent(Sender: TObject);
     procedure RemoteEditChange(Sender: TObject);
   public
     constructor Create; override;
@@ -48,7 +46,7 @@ var
 implementation
 
 uses
-  Debugunit, wikiserverunit;
+  Debugunit, wikiserverunit, responsehelper;
 
 function GetStrToolType(DObj: PDiskObject; Entry: string; Default: string): string;
 var
@@ -147,6 +145,11 @@ begin
   MainGrp.Disabled := True;
 end;
 
+procedure TMainWindow.ReloadTemplatesEvent(Sender: TObject);
+begin
+  //
+end;
+
 procedure TMainWindow.RemoteEditChange(Sender: TObject);
 begin
   if Sender is TMUIArea then
@@ -208,6 +211,18 @@ begin
   ChooseRemoteEdit.InputMode := MUIV_InputMode_Toggle;
   ChooseRemoteEdit.OnSelected := @RemoteEditChange;
   ChooseRemoteEdit.Parent := Grp2;
+
+  Grp2 := TMUIGroup.Create;
+  Grp2.Frame := MUIV_Frame_None;
+  Grp2.Horiz := True;
+  Grp2.Parent := Grp;
+
+  TMUIRectangle.Create.Parent := Grp2;
+  with TMUIButton.Create('Reload Templates') do
+  begin
+    OnClick  := @ReloadTemplatesEvent;
+    Parent := Grp2;
+  end;
 
   OnServerEnd  := @EndServerEvent;
 end;

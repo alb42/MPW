@@ -12,7 +12,7 @@ procedure PrintAbout(Document: string; AResponse: TFPHTTPConnectionResponse);
 implementation
 
 uses
-  EditUnit, Exec;
+  Responsehelper, Exec;
 
 const
   Units: array[0..4] of string = ('', 'k', 'M', 'G', 'T');
@@ -99,14 +99,10 @@ begin
       Inc(Add);
       Result := Result + IntToStr(add^);
     end;
-
-
     CloseLibrary(SocketBase);
     SocketBase := nil;
     Freemem(PC);
   end;
-
-
 end;
 
 procedure PrintAbout(Document: string; AResponse: TFPHTTPConnectionResponse);
@@ -114,9 +110,9 @@ var
   Answer: TStringList;
   s: String;
   Mema, Memt: ULONG;
-  MyExecBase: PExecBase;
+  //MyExecBase: PExecBase;
 begin
-  MyExecBase := PExecBase(_ExecBase);
+  //MyExecBase := PExecBase(_ExecBase);
   s := '';
   Answer := TStringList.Create;
   try
@@ -124,6 +120,8 @@ begin
     Answer.add('<html><head><title>MPW - About</title></head>');
     Answer.Add('<body>');
     Answer.Add('<H1>About</H1>');
+    Answer.Add('<H4>' + Copy(VERSION, 6) + '</H4>');
+
     Answer.Add('<table border="0"><tr><td>');
 
     Answer.Add('<table border="1">');

@@ -9,6 +9,9 @@ uses
 
 procedure DebugOut(Txt: string);
 
+var
+  DebugToCON: Boolean;
+  DebugToDebug: Boolean;
 implementation
 
 var
@@ -18,8 +21,10 @@ procedure DebugOut(Txt: string);
 begin
   DebugWriteLock.Enter;
   try
-    //writeln(Txt);
-    SysDebugLn(Txt);
+    if DebugToCON then
+      writeln(Txt);
+    if DebugToDebug then
+      SysDebugLn(Txt);
   finally
     DebugWriteLock.Leave;
   end;

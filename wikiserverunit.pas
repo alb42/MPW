@@ -43,7 +43,7 @@ implementation
 
 uses
   documentsunit, editunit, searchunit, httpprotocol, templateunit, debugunit,
-  AboutUnit, imagesunit;
+  AboutUnit, imagesunit, responsehelper;
 
 { TWikiServer }
 
@@ -105,6 +105,7 @@ Var
   end;
 
 begin
+  inherited;
   IsLocalCall := NetAddrToStr(ARequest.Connection.Socket.RemoteAddress.sin_addr) = '127.0.0.1';
   WriteInfo('Connection ('+aRequest.Connection.ConnectionID+') - Request ['+aRequest.RequestID+'] from ' + NetAddrToStr(ARequest.Connection.Socket.RemoteAddress.sin_addr) + ': ' + ARequest.Url);
   try
@@ -127,6 +128,7 @@ begin
         '/search/': SearchDocument(ARequest.ContentFields, AResponse);
         '/about/': PrintAbout(URI.Document, AResponse);
         '/images/': ImagesPage(AResponse);
+        '/uploadimg/': UploadImg(ARequest, AResponse);
         else
         begin
           Send404(AResponse);

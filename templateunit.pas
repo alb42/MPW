@@ -13,6 +13,7 @@ var
   NewTemplate: string = '<html><body><form method="POST" action="/save/"><H1 align="center">Edit new Document</H1><textarea id="content" name="content" cols=80 rows=25>%txt%</textarea><br><input type="text" id="name" name="name" value="New Page"><button type="submit">Save</button></form><hr></body></html>';
   SearchTemplate: string = '<html><body><form method="POST" action="/search/"><input type="text" id="search" name="search" value="%search%"><button type="submit">Search</button><br><label>in files</label><input type="checkbox" id="infiles" name="infiles" value="yes" %infile%></form><hr><ul>%sresults%</u></body></html>';
 
+procedure ReloadTemplates;
 
 implementation
 
@@ -37,10 +38,15 @@ begin
     DebugOut(Filename + ' does not exist ' + path);
 end;
 
-initialization
+procedure ReloadTemplates;
+begin
   LoadTemplate('edit.html', EditTemplate);
   LoadTemplate('new.html', NewTemplate);
   LoadTemplate('page.html', PageTemplate);
   LoadTemplate('search.html', SearchTemplate);
+end;
+
+initialization
+  ReloadTemplates;
 end.
 

@@ -12,7 +12,7 @@ procedure SearchDocument(Params: TStrings; var AResponse: TFPHTTPConnectionRespo
 implementation
 
 uses
-  templateunit, documentsunit, editunit, debugunit;
+  templateunit, documentsunit, responsehelper, editunit, debugunit;
 
 procedure SearchDocument(Params: TStrings; var AResponse: TFPHTTPConnectionResponse);
 var

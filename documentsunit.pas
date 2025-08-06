@@ -97,20 +97,50 @@ begin
 end;
 
 
+function CopyFile(Src, dest: string): Boolean;
+var
+  SL: TStringList;
+begin
+  Result := False;
+  if not FileExists(Src) then
+    Exit;
+  SL := TStringList.Create;
+  try
+    SL.LoadFromFile(Src);
+    SL.SaveToFile(Dest);
+    Result := True;
+  except
+    Result := False;
+  end;
+  SL.Free;
+end;
+
 { TPageEntries }
 
 procedure TPageEntries.LoadFromFile(AFilename: string);
 var
   SL: TStringList;
-  Line: string;
+  Line, TemplateFolder: string;
   n: SizeInt;
   NP: TPageEntry;
 begin
   Clear;
-  if not FileExists(AFilename) then
-    Exit;
   SL := TStringList.Create;
   try
+    if not FileExists(AFilename) then
+    begin
+      DebugOut('index not found, copy template');
+      TemplateFolder := ExtractFileDir(ParamStr(0)) + '/template/';
+      CopyFile(TemplateFolder + IndexName, AFilename);
+      CopyFile(TemplateFolder + 'Mainpage.md', ExtractFilePath(AFilename) + 'Mainpage.md');
+      CopyFile(TemplateFolder + 'Markdown.md', ExtractFilePath(AFilename) + 'Markdown.md');
+    end;
+    if not FileExists(AFilename) then
+    begin
+      DebugOut('Error: Index not found. Abort. ' + AFilename);
+      Exit;
+    end;
+    SL.Clear;
     SL.LoadFromFile(AFilename);
     for Line in SL do
     begin
