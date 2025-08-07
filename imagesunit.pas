@@ -13,7 +13,8 @@ procedure UploadImg(ARequest: TFPHTTPConnectionRequest; AResponse: TFPHTTPConnec
 implementation
 
 uses
-  documentsunit, editunit, debugunit, responsehelper;
+  documentsunit, debugunit, responsehelper;
+
 
 procedure ImagesPage(AResponse: TFPHTTPConnectionResponse);
 var
@@ -66,6 +67,11 @@ begin
   DebugOut('got first file ' + HexStr(FirstFile) + ' content: ' + ARequest.Content);
   Filename := FirstFile.FileName;
   DebugOut('got filename ' + Filename);
+  if Pos('image', FirstFile.ContentType) <= 0 then
+  begin
+    SendCode(AResponse, 406, 'Not Acceptable.', 'Illegal Filetype, only images allowed to upload (this is a ' + FirstFile.ContentType + ')');
+    Exit;
+  end;
   PicsPath := IncludeTrailingPathDelimiter(DataFolder) + 'pics/';
   FullFilename := PicsPath + Filename;
   if FileExists(FullFilename) and (ARequest.ContentFields.Values['overwrite'] <> 'yes') then
