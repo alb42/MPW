@@ -212,16 +212,19 @@ begin
   ChooseRemoteEdit.OnSelected := @RemoteEditChange;
   ChooseRemoteEdit.Parent := Grp2;
 
-  Grp2 := TMUIGroup.Create;
-  Grp2.Frame := MUIV_Frame_None;
-  Grp2.Horiz := True;
-  Grp2.Parent := Grp;
-
-  TMUIRectangle.Create.Parent := Grp2;
-  with TMUIButton.Create('Reload Templates') do
+  if DebugToDebug then
   begin
-    OnClick  := @ReloadTemplatesEvent;
-    Parent := Grp2;
+    Grp2 := TMUIGroup.Create;
+    Grp2.Frame := MUIV_Frame_None;
+    Grp2.Horiz := True;
+    Grp2.Parent := Grp;
+
+    TMUIRectangle.Create.Parent := Grp2;
+    with TMUIButton.Create('Reload Templates') do
+    begin
+      OnClick  := @ReloadTemplatesEvent;
+      Parent := Grp2;
+    end;
   end;
 
   OnServerEnd  := @EndServerEvent;
