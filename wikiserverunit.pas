@@ -10,8 +10,9 @@ uses
   MarkdownProcessor,
   MarkdownUtils;
 
-Type
+{$include mimetypes.inc}
 
+type
   TWriteInfoMethod = procedure(S: string) of object;
 
   { TWikiServer }
@@ -48,10 +49,18 @@ uses
 { TWikiServer }
 
 procedure TWikiServer.CheckMimeLoaded;
+var
+  Mem: TMemoryStream;
 begin
   if (not MimeLoaded) and (MimeTypesFile <> '') then
   begin
-    MimeTypes.LoadFromFile(MimeTypesFile);
+    Mem := TMemoryStream.Create;
+    Mem.Write(mimetypesstr[0], Length(mimetypesstr));
+    Mem.Position := 0;
+    MimeTypes.LoadFromStream(Mem);
+    Mem.Free;
+    DebugOut('mime types loaded');
+    //MimeTypes.LoadFromFile(MimeTypesFile);
     FMimeLoaded := True;
   end;
 end;
