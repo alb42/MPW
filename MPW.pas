@@ -45,6 +45,7 @@ Var
 
 procedure TMainThread.Execute;
 begin
+  Self.NameThreadForDebugging('MPW Server Thread');
   FIsRunning := True;
   DebugOut('Start Thread');
   Serv:=THTTPServer.Create(Nil);
@@ -114,9 +115,9 @@ begin
   if FindCmdLineSwitch('debug') then
   begin
     if WithGUI then
-      DebugToCON := True
+      DebugToDebug := True
     else
-      DebugToDebug := True;
+      DebugToCON := True;
     DebugOut('Debug Output on');
   end;
   //

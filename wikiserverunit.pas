@@ -26,6 +26,7 @@ type
     FWriteInfo: TWriteInfoMethod;
   Protected
     procedure CheckMimeLoaded;
+    function GetMenu(IsWriteallowed: Boolean): string;
 
     Property MimeLoaded : Boolean Read FMimeLoaded;
   public
@@ -44,7 +45,7 @@ implementation
 
 uses
   documentsunit, editunit, searchunit, httpprotocol, templateunit, debugunit,
-  AboutUnit, imagesunit, responsehelper;
+  AboutUnit, imagesunit, responsehelper, StrUtils;
 
 { TWikiServer }
 
@@ -63,6 +64,18 @@ begin
     //MimeTypes.LoadFromFile(MimeTypesFile);
     FMimeLoaded := True;
   end;
+end;
+
+function TWikiServer.GetMenu(IsWriteallowed: Boolean): string;
+begin
+  Result := '<ul>' +
+  '<li><a href="/search/">Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<br>' +
+  IfThen(IsWriteallowed, '<li><a href="/new/">New Page</a><br>') +
+  '<li><a href="/list/">Page List</a><br>' +
+  '<li><a href="/images/">Image List</a><br>' +
+  '<li><a href="/about/">About</a><br>' +
+  '</ul>';
+
 end;
 
 procedure LoadImage(Path: string; AResponse: TFPHTTPConnectionResponse);
@@ -168,7 +181,7 @@ begin
     Txt := MD.processFile(AFilename);
     MD.Free;
     //
-    HtmlTxt := PageTemplate;
+    HtmlTxt := StringReplace(PageTemplate, '%menu%', GetMenu(CheckIfAllowed()), [rfReplaceAll]);
     HtmlTxt := StringReplace(HtmlTxt, '%name%', INetString(Aname), [rfReplaceAll]);
     HtmlTxt := StringReplace(HtmlTxt, '%doclink%', URI.Document, [rfReplaceAll]);
     HtmlTxt := StringReplace(HtmlTxt, '%txt%', Txt, [rfReplaceAll]);
